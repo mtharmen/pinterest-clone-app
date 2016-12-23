@@ -1,0 +1,70 @@
+body { 
+  /*padding-top: 100px;*/
+  margin-bottom: 60px;
+}
+
+.fa-exclamation-triangle {
+  color: #e74c3c;
+}
+
+.fa-check {
+  color: #00bc8c;
+}
+
+/* Fixes disabled buttons not have the now-allowed cursor */
+button:disabled, button[disabled] {
+  cursor: not-allowed;
+  pointer-events: all !important;
+}
+
+/* Footer Stuff */
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+.footer {
+  position: absolute;
+  padding-top: 30px;
+  bottom: 0;
+  width: 100%;
+  height: 61px;
+}
+
+.footer p {
+  text-align: center;
+}
+
+/*=====================================Navbar Fixes=====================================*/
+
+.pagination, .carousel, .panel-title a { cursor: pointer; }
+
+.navbar-collapse.collapse {
+  display: block!important;
+}
+
+.navbar-nav > li, .navbar-nav {
+  float: left !important;
+}
+
+.navbar-nav.navbar-right:last-child {
+  margin-right: 15px !important;
+}
+
+.navbar-right {
+  float: right!important;
+}
+
+.dropdown-menu {
+  width: 100%;
+}
+
+/*=====================================MasonryJS=====================================*/
+
+hr {
+  margin-bottom: 10px;
+}
+
+.panel-body {
+  padding-bottom: 10px;
+}
