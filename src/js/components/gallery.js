@@ -1,67 +1,34 @@
 import React from 'react';
 import Masonry from 'react-masonry-component';
-import axios from 'axios';
 
 import Board from './board';
-
-import mockBoards from '../mockBoards.js';
 
 var masonryOptions = {
 	transitionDuration: 500
 };
 
 class Gallery extends React.Component{
-
-	constructor(props) {
-		super(props);
-
-		this.state = {
-			boards: []
+	constructor() {
+		super();
+		this.state = { 
+			showModal: false
 		};
 
-		this.updateLikes = this.updateLikes.bind(this);
+		this.close = this.close.bind(this);
+		this.open = this.open.bind(this);
 	}
 
-	updateLikes(e) {
-		var id = e.target.id;
-		var url = '/api/updateLikes/' + id;
-		axios(url)
-			.then(res => {
-				var update = res.data ? 1 : -1;
-				var copy = JSON.parse(JSON.stringify(this.state.boards));
-				copy.map(board => {
-					if (board._id === id) {
-						board.likes += update;
-					};
-					return board;
-				});
-
-				this.setState({ boards: copy });
-			})
-			.catch(res => {
-				console.error(res);
-			});
+	close() {
+		this.setState({ showModal: false });
 	}
 
-	componentDidMount() {
-		var APIroute = '/api/AllBoards';
-		if (this.props.ownerPage) {
-			APIroute += '/' + this.props.ownerPage;
-		} 
-		axios.get(APIroute)
-			.then(res => {
-				const boards = res.data;
-				this.setState({ boards: boards });
-			})
-			.catch(res => {
-				console.error(res);
-			});
+	open() {
+		this.setState({ showModal: true });
 	}
 
 	render() {
-		var profile = (this.props.ownerPage === this.props.user.username) && this.props.user;
-		var boards = this.state.boards.map((boardInfo, i) => {
-			return <Board key={i} board={boardInfo} user={this.props.user} handleLikeClick={this.updateLikes} profile={profile} />; 
+		var boards = this.props.boards.map((boardInfo, i) => {
+			return <Board key={i} board={boardInfo} user={this.props.user} profile={this.props.profile} handleLikeClick={this.props.updateLikes} handleDeleteClick={this.props.handleDeleteClick} />; 
 		}, this);
 
 		return(

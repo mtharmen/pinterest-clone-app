@@ -5,23 +5,13 @@ import { Link } from 'react-router';
 class BoardModal extends React.Component{
 	constructor(props) {
 		super(props);
-		this.state = { 
-			text: '',
-		};
 
-		this.save = this.save.bind(this);
-		this.handleInput = this.handleInput.bind(this);
+		this.handleDeleteClick = this.handleDeleteClick.bind(this);
 	}
 
-	save() {
-		var text = this.state.text;
-		this.setState({ text: '' });
-		this.props.save(text);
-	}
-
-	handleInput(e) {
-		e.preventDefault();
-		this.setState({ text: e.target.value });
+	handleDeleteClick() {
+		this.props.handleDeleteClick(this.props.board._id);
+		this.props.close();
 	}
 
 	render() {
@@ -36,10 +26,10 @@ class BoardModal extends React.Component{
 				    <img className="center-block img-responsive" src={this.props.board.image} />
 				  </Modal.Body>
 				  <Modal.Footer>
-				  	{this.props.user.username === this.props.board.owner ?
-				  		<button className="btn btn-danger pull-left"><i className="fa fa-trash" aria-hidden="true"></i></button>
+				  	{this.props.profile ?
+				  		<button className="btn btn-danger pull-left" onClick={this.handleDeleteClick}><i className="fa fa-trash" aria-hidden="true"></i></button>
 				  	:
-				  		<Link to={link}><h5 className="pull-left">{this.props.board.owner}</h5></Link>
+				  		<Link to={link}><h5 className="pull-left">@{this.props.board.owner}</h5></Link>
 				  	}
 					<button className="btn btn-primary pull-right" id={this.props.board._id} disabled={!this.props.user} onClick={this.props.handleLikeClick}> 
 						<i className="fa fa-heart" aria-hidden="true"></i> ×{this.props.board.likes}

@@ -6,10 +6,6 @@ var User  = require('../config/models/user');
 
 module.exports = function(app) {
 
-	app.get('/api/testing', function(req, res, next) {
-		res.json(mockData)
-	});
-
 	app.get('/api/allBoards/:user?', function(req, res, next) {
 
 		var query = req.params.user ? { owner: req.params.user } : {};
@@ -17,34 +13,26 @@ module.exports = function(app) {
 		Board.find(query, '-__v', function(err, boards) {
 			if (err) { return next(err); }
 
-			var user = req.user ? req.user.username : ''
+			var user = req.user ? req.user.username : '';
 			res.json(convertLikes(boards, user));
 		});
 	});
 
-	app.post('/api/checkImage/', function(req, res, next) {
-
-		var query = req.body.imgUrl;
-
-		// Check image
-		res.send('checked');
-	});
-
 	app.post('/api/addBoard', function(req, res, next) {
 
-		var imageUrl    = req.body.imageUrl;
+		var imageUrl    = req.body.image;
 		var description = req.body.description;
 		var owner       = req.user.username;
 
 		var imgID = generateID(4);
-		var path = './public/imgs/' + imgID + '.png';
+		var path = './dist/imgs/' + imgID + '.png';
 
 		request(imageUrl)
 			.pipe(fs.createWriteStream(path))
 			.on('error', function(err) { return next(err); })
 			.on('close', function() { 
 				var newBoard = new Board({
-					image       : 'imgs/' + imgID + '.png',
+					image       : '/imgs/' + imgID + '.png',
 					description : description,
 					owner       : owner,
 					likes       : []
@@ -52,9 +40,18 @@ module.exports = function(app) {
 
 				newBoard.save(function(err) {
 					if (err) { return next(err); }
-					res.json(newBoard);
+					res.json(convertLikes([newBoard], owner));
 				});
 			});
+	});
+
+	app.get('/api/removeBoard/:id', function(req, res, next) {
+		var id = req.params.id;
+
+		Board.findOneAndRemove({ _id: id }, function(err) {
+			if (err) { return next(err); }
+			res.send('removed');
+		});
 	});
 
 	app.get('/api/updateLikes/:id', function(req, res, next) {
@@ -73,18 +70,8 @@ module.exports = function(app) {
 
 			board.save(function(err) {
 				if (err) { return next(err); }
-				console.log(plusOne)
 				res.send(plusOne);
 			});
-		});
-	});
-
-	app.get('/api/removeBoard/:id', function(req, res, next) {
-		var id = req.params.id;
-
-		Board.findOneAndRemove({ _id: id }, function(err) {
-			if (err) { return next(err); }
-			res.send('removed');
 		});
 	});
 };
@@ -111,7 +98,7 @@ var convertLikes = function(boards, user) {
 	var copy = JSON.parse(JSON.stringify(boards));
 	return copy.map(function(board) {
 		var found = board.likes.indexOf(user);
-		board.liked = found > 0;
+		board.liked = found > -1;
 		board.likes = board.likes.length;
 		return board;
 	});

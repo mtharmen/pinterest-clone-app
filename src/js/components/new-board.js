@@ -7,7 +7,8 @@ class NewBoardModal extends React.Component{
 		this.state = { 
 			description: '',
 			image: undefined,
-			temp: ''
+			temp: '',
+			valid: false
 		};
 
 		this.submit = this.submit.bind(this);
@@ -19,18 +20,19 @@ class NewBoardModal extends React.Component{
 
 	submit() {
 		var newBoard = {image: this.state.image, description: this.state.description};
-		this.setState({ description: '', image: undefined, temp: '' });
+		this.setState({ description: '', image: undefined, temp: '', valid: false });
 		this.props.createBoard(newBoard);
-		this.props.close()
+		this.props.close();
 	}
 
 	imageSubmit() {
-		this.setState({ image: this.state.temp });
+		this.setState({ image: this.state.temp, valid: true });
 	}
 
 	handleInput(e) {
 		e.preventDefault;
-		var newDescription = this.state.description.length < 15 ? e.target.value : this.state.description;
+		// var newDescription = this.state.description.length < 15 ? e.target.value : this.state.description;
+		var newDescription = e.target.value;
 		this.setState({ description: newDescription });
 	}
 
@@ -42,6 +44,7 @@ class NewBoardModal extends React.Component{
 	brokenImage(e) {
 		console.log('broken image detected: ' + e.target.src);
 		e.target.src = e.target.src ? "http://placehold.it/500" : e.target.src;
+		this.setState({valid: false});
 	}
 
 	render() {
@@ -61,7 +64,7 @@ class NewBoardModal extends React.Component{
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
-					<button className="btn btn-success col-xs-12" disabled={!this.state.image || !this.state.description} onClick={this.submit}>Submit</button>
+					<button className="btn btn-success col-xs-12" disabled={!this.state.valid || !this.state.description} onClick={this.submit}>Submit</button>
 				</Modal.Footer>
 			</Modal>
 	    );

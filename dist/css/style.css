@@ -68,3 +68,7 @@ hr {
 .panel-body {
   padding-bottom: 10px;
 }
+
+.maxheight {
+  max-height: 400px
+}

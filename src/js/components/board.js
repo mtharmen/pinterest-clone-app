@@ -12,6 +12,7 @@ class Board extends React.Component {
 
 		this.close = this.close.bind(this);
 		this.open = this.open.bind(this);
+		this.handleDeleteClick = this.handleDeleteClick.bind(this);
 	}
 
 	close() {
@@ -22,21 +23,24 @@ class Board extends React.Component {
 		this.setState({ showModal: true });
 	}
 
+	handleDeleteClick() {
+		this.props.handleDeleteClick(this.props.board._id);
+	}
+
 	render() {
 		var link = '/user/' + this.props.board.owner;
-
 		return (
 			<div className="col-md-3 col-xs-6">
 				<div className="panel panel-default">
 					<div className="panel-body">
-						<img className="center-block img-responsive" src={this.props.board.image} onClick={this.open}/>
+						<img className="center-block img-responsive maxheight" src={this.props.board.image} onClick={this.open}/>
 						<h3 className="text-center">{this.props.board.description}</h3>
 					</div>
 					<div className="panel-footer clearfix">
 						{this.props.profile ?
-							<button className="btn btn-danger btn-sm pull-left"><i className="fa fa-trash" aria-hidden="true"></i></button>
+							<button className="btn btn-danger btn-sm pull-left" onClick={this.handleDeleteClick}><i className="fa fa-trash" aria-hidden="true"></i></button>
 						:
-							<Link to={link}><h5 className="pull-left">{this.props.board.owner}</h5></Link>
+							<Link to={link}><h5 className="pull-left">@{this.props.board.owner}</h5></Link>
 						}
 						<button className="btn btn-primary btn-sm pull-right" id={this.props.board._id} disabled={!this.props.user} onClick={this.props.handleLikeClick}> 
 							<i className="fa fa-heart" aria-hidden="true"></i> ×{this.props.board.likes}
@@ -47,7 +51,9 @@ class Board extends React.Component {
 							close={this.close} 
 							board={this.props.board}
 							user={this.props.user}
-							handleLikeClick={this.props.handleLikeClick} 
+							profile={this.props.profile}
+							handleLikeClick={this.props.handleLikeClick}
+							handleDeleteClick={this.props.handleDeleteClick}
 				/>
 			</div>
 		);
