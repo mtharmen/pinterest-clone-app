@@ -40,7 +40,7 @@ module.exports = function(passport) {
                 user.username            = profile.username;
 
                 user.twitter.token       = token;
-                user.twitter.username    = profile.username;
+                user.twitter.id          = profile.id;
                 user.twitter.displayName = profile.displayName;               
 
                 user.save(function(err) {
@@ -59,7 +59,6 @@ module.exports = function(passport) {
 
               newUser.twitter.id          = profile.id;
               newUser.twitter.token       = token;
-              newUser.twitter.username    = profile.username;
               newUser.twitter.displayName = profile.displayName;
 
               newUser.save(function(err) {

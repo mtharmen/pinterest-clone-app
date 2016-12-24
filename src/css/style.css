@@ -3,14 +3,6 @@ body {
   margin-bottom: 60px;
 }
 
-.fa-exclamation-triangle {
-  color: #e74c3c;
-}
-
-.fa-check {
-  color: #00bc8c;
-}
-
 /* Fixes disabled buttons not have the now-allowed cursor */
 button:disabled, button[disabled] {
   cursor: not-allowed;
@@ -71,4 +63,22 @@ hr {
 
 .maxheight {
   max-height: 400px
+}
+
+.max-dimensions {
+  max-height: 600px;
+}
+
+#description-input {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid white;
+  border-radius: 0px;
+  color: white;
+  text-align: center;
+}
+
+#new-board-button {
+  margin-bottom: 10px;
+  margin-left: 15px;
 }

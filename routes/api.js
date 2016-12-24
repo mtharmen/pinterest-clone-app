@@ -18,6 +18,17 @@ module.exports = function(app) {
 		});
 	});
 
+	app.get('/api/userCheck/:user', function(req, res, next) {
+
+		var query = req.params.user ? { username: req.params.user } : {};
+
+		User.findOne(query, '-__v', function(err, user) {
+			if (err) { return next(err); }
+
+			res.send(!!user)
+		});
+	});
+
 	app.post('/api/addBoard', function(req, res, next) {
 
 		var imageUrl    = req.body.image;
@@ -103,72 +114,3 @@ var convertLikes = function(boards, user) {
 		return board;
 	});
 };
-
-var mockData = [ 
-	  { _id: '58532e193dbc6906d8298934',
-	    image: 'http://placehold.it/100x90',
-	    description: 'Blah blah blah',
-	    owner: '@Admin',
-	    likes: 4,
-	    liked: false },
-	  { _id: '58532e5cd6397617807c6dbf',
-	    image: 'http://placehold.it/100x60',
-	    description: 'Blah blah blah',
-	    owner: '@Admin',
-	    likes: 3,
-	    liked: false },
-	  { _id: '58532e609454330324995bb2',
-	    image: 'http://placehold.it/100x80',
-	    description: 'Blah blah blah',
-	    owner: '@Admin',
-	    likes: 3,
-	    liked: false },
-	  { _id: '58532e6292ed661e547e6f07',
-	    image: 'http://placehold.it/100x90',
-	    description: 'Blah blah blah',
-	    owner: '@Admin',
-	    likes: 1,
-	    liked: false },
-	  { _id: '58532e64d8c9830db44bcc37',
-	    image: 'http://placehold.it/100x120',
-	    description: 'Blah blah blah',
-	    owner: '@Admin',
-	    likes: 3,
-	    liked: false },
-	  { _id: '58532e670da5551654be5753',
-	    image: 'http://placehold.it/100x70',
-	    description: 'Blah blah blah',
-	    owner: '@Admin',
-	    likes: 1,
-	    liked: false },
-	  { _id: '585330ddb431840dcce7ced0',
-	    image: 'http://placehold.it/100x50',
-	    description: 'Blah blah blah',
-	    owner: '@Admin2',
-	    likes: 2,
-	    liked: false },
-	  { _id: '585330df46d0be21d4c09619',
-	    image: 'http://placehold.it/100x110',
-	    description: 'Blah blah blah',
-	    owner: '@Admin2',
-	    likes: 1,
-	    liked: false },
-	  { _id: '585330e03e7e3319bc2aef65',
-	    image: 'http://placehold.it/100x130',
-	    description: 'Blah blah blah',
-	    owner: '@Admin2',
-	    likes: 2,
-	    liked: false },
-	  { _id: '585330e6e49c4a1dd867c94f',
-	    image: 'http://placehold.it/100x100',
-	    description: 'Blah blah blah',
-	    owner: '@Admin3',
-	    likes: 2,
-	    liked: false },
-	  { _id: '585330e828b45d0c685373b4',
-	    image: 'http://placehold.it/100x60',
-	    description: 'Blah blah blah',
-	    owner: '@Admin3',
-	    likes: 1,
-	    liked: false } 
-]

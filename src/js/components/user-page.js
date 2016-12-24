@@ -103,7 +103,17 @@ class UserPage extends React.Component {
    		}
       	return (
          	<div>
-				{ profile && <button className="btn btn-primary btn-lg" onClick={this.open}>New</button> }
+				{ profile ? (
+					<span>
+						<h1 className="text-center">My Boards</h1>
+						<button className="btn btn-primary btn-lg" id="new-board-button" onClick={this.open}>New</button>
+					</span>
+				) : (
+					<span>
+						<h1 className="text-center">@{this.props.params.username}'s Boards</h1>
+						{!this.state.boards.length && <h2 className="text-center">No Boards Found</h2>}
+					</span>
+				)}
             	<Gallery user={this.props.route.user} boards={this.state.boards} updateLikes={this.updateLikes} profile={profile} createBoard={this.createBoard} handleDeleteClick={this.deleteBoard} />
             	<NewBoardModal show={this.state.showModal} 
 						   close={this.close}

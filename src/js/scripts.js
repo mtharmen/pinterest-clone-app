@@ -19,12 +19,6 @@ class App extends React.Component {
 		};
 	}
 
-	filterBoard(user) {
-		return this.state.boards.filter(board => {
-			return board.owner === user;
-		});
-	}
-
 	render() {
 		return (
 			<div>
@@ -44,12 +38,25 @@ class Routing extends React.Component {
 			<Router history={browserHistory} >
 				<Route path="/" user={this.props.user} component={App}>
 					<IndexRoute user={this.props.user} component={Home}/>
-					<Route path="user/:username" user={this.props.user} component={UserPage} />
+					<Route path="user/:username" user={this.props.user} component={UserPage} onEnter={userCheck} />
 				</Route>
 			</Router>
 		);
 	}
 }
+
+function userCheck(nextState, replaceState) {
+	var path = '/api/userCheck/' + nextState.params.username;
+	axios.get(path)
+		.then(res => {
+			if (res.data) {
+				replaceState({ nextPathname: nextState.location.pathname }, '/');
+			}			
+		})
+		.catch(res => {
+			console.error(res);
+		});
+};
 
 axios.get('/auth/user')
 	.then(res => {
@@ -59,6 +66,4 @@ axios.get('/auth/user')
 	.catch(res => {
 		console.error(res);
 	});
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+	

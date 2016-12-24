@@ -50,7 +50,10 @@ class Home extends React.Component {
 
 	render() {
 		return (
-			<Gallery user={this.props.route.user} boards={this.state.boards} updateLikes={this.updateLikes} />
+			<div>
+				<h1 className="text-center">Favourite Knock-offs</h1>
+				<Gallery user={this.props.route.user} boards={this.state.boards} updateLikes={this.updateLikes} />
+			</div>
 		);
 	}
 }

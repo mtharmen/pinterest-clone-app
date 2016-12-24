@@ -43,7 +43,7 @@ class NewBoardModal extends React.Component{
 
 	brokenImage(e) {
 		console.log('broken image detected: ' + e.target.src);
-		e.target.src = e.target.src ? "http://placehold.it/500" : e.target.src;
+		e.target.src = e.target.src ? "/imgs/error.png" : e.target.src;
 		this.setState({valid: false});
 	}
 
@@ -52,15 +52,16 @@ class NewBoardModal extends React.Component{
 			<Modal show={this.props.show} onHide={this.props.close}>
 				<Modal.Header closeButton />
 				<Modal.Body>
-					<img className="center-block img-responsive" src={this.state.image} onError={this.brokenImage}/>
+					<img className="center-block img-responsive max-dimensions" src={this.state.image} onError={this.brokenImage}/>
+					<hr />				
 					<div className="form-group">
-						<input type="text" className="form-control" id="description-input" placeholder="Description" value={this.state.description} onChange={this.handleInput} />
+						<input type="text" className="form-control" id="description-input" placeholder="Give A Short Description" value={this.state.description} onChange={this.handleInput} />
 					</div>
 					<div className="input-group">
+						<input type="text" className="form-control" placeholder="Image Link" value={this.state.temp} onChange={this.handleImageSubmit} />
 						<span className="input-group-btn">
 							<button className="btn btn-success" onClick={this.imageSubmit} >Add Image</button>
 						</span>
-						<input type="text" className="form-control" placeholder="Image Link" value={this.state.temp} onChange={this.handleImageSubmit} />
 					</div>
 				</Modal.Body>
 				<Modal.Footer>
