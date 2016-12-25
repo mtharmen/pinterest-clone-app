@@ -16,17 +16,17 @@ module.exports = function(app, base) {
 	// Mongoose setup
 	mongoose.Promise = global.Promise;
 
-	mongoose.connect('mongodb://' + ip + '/testDB');
+	mongoose.connect('mongodb://' + ip + '/pintrestAppDB');
 	var db = mongoose.connection;
 	db.on('error', console.error.bind(console, 'connection error:'));
 	db.once('open', function() {
-	    console.log('Connected to testDB');
+	    console.log('Connected to pintrestAppDB');
 	});
 
 	// Close MongoDB connection
 	process.on('SIGINT', function() {  
 	    db.close(function () { 
-	        console.log('Closing connection to testDB'); 
+	        console.log('Closing connection to pintrestAppDB'); 
 	        process.exit(0); 
 	    }); 
 	});
