@@ -3,6 +3,7 @@ import axios from 'axios';
 
 import Gallery from './gallery';
 
+
 class Home extends React.Component {
 	constructor(props) {
 		super(props);
@@ -24,6 +25,7 @@ class Home extends React.Component {
 			})
 			.catch(res => {
 				console.error(res);
+				this.props.router.push('error');
 			});
 	}
 
@@ -45,8 +47,10 @@ class Home extends React.Component {
 			})
 			.catch(res => {
 				console.error(res);
+				this.props.router.push('error');
 			});
 	}
+
 
 	render() {
 		return (

@@ -30,6 +30,7 @@ class UserPage extends React.Component {
 			})
 			.catch(res => {
 				console.error(res);
+				this.props.router.push('error');
 			});
 	}
 
@@ -59,6 +60,7 @@ class UserPage extends React.Component {
 			})
 			.catch(res => {
 				console.error(res);
+				this.props.router.push('error');
 			});
 	}
 
@@ -78,6 +80,7 @@ class UserPage extends React.Component {
 			})
 			.catch(res => {
 				console.error(res);
+				this.props.router.push('error');
 			});
 	}
 
@@ -93,6 +96,7 @@ class UserPage extends React.Component {
 			})
 			.catch(res => {
 				console.error(res);
+				this.props.router.push('error');
 			});
 		
 	}
