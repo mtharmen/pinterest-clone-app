@@ -15,11 +15,15 @@ module.exports = function(passport) {
     });
   });
 
+  var ip           = process.env.ip           || '127.0.0.1';
+  var port         = process.env.port         || 8080;
+  var callback_url = process.env.CALLBACK_URL || 'http://' + ip + ':' + port;
+
   passport.use(new TwitterStrategy({
 
-    'consumerKey'     : process.env.consumerKey,
-    'consumerSecret'  : process.env.consumerSecret,
-    'callbackURL'     : 'http://' + process.env.IP + ':' + process.env.PORT + '/auth/twitter/callback',
+    'consumerKey'     : process.env.TWITTER_CONSUMER_KEY,
+    'consumerSecret'  : process.env.TWITTER_CONSUMER_SECRET,
+    'callbackURL'     : callback_url + '/auth/twitter/callback',
     passReqToCallback : true
 
   },

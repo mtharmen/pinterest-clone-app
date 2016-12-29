@@ -15,18 +15,19 @@ module.exports = function(app, base) {
 	
 	// Mongoose setup
 	mongoose.Promise = global.Promise;
-
-	mongoose.connect('mongodb://' + ip + '/pintrestAppDB');
+	var mongodbUrl = process.env.MONGODB_URL || 'mongodb://' + ip;
+		
+	mongoose.connect(mongodbUrl + '/mtharmen-pinterst-clone-app');
 	var db = mongoose.connection;
 	db.on('error', console.error.bind(console, 'connection error:'));
 	db.once('open', function() {
-	    console.log('Connected to pintrestAppDB');
+	    console.log('Connected to mtharmen-pinterst-clone-app');
 	});
 
 	// Close MongoDB connection
 	process.on('SIGINT', function() {  
 	    db.close(function () { 
-	        console.log('Closing connection to pintrestAppDB'); 
+	        console.log('Closing connection to mtharmen-pinterst-clone-app'); 
 	        process.exit(0); 
 	    }); 
 	});
@@ -45,7 +46,7 @@ module.exports = function(app, base) {
 	require('./passport')(passport);
 
 	app.use(session({
-	    secret: process.env.sessionSecret,
+	    secret: process.env.SESSION_SECRET,
 	    resave: true,
 	    store : new MongoStore({
 	        mongooseConnection: mongoose.connection
