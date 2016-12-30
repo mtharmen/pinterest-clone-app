@@ -33,19 +33,15 @@ class Gallery extends React.Component{
 
 		return(
 			<div>
-	            { this.props.boards.length ?
-			        <Masonry
-			            className={'my-gallery-class'}
-			            elementType={'div'}
-			            options={masonryOptions}
-			            disableImagesLoaded={false}
-			            updateOnEachImageLoad={false}
-			        >
-			            {boards}
-			        </Masonry> 
-	        	: 
-	        		<h1 className="text-center">No Boards Found</h1>
-	        	}
+		        <Masonry
+		            className={'my-gallery-class'}
+		            elementType={'div'}
+		            options={masonryOptions}
+		            disableImagesLoaded={false}
+		            updateOnEachImageLoad={false}
+		        >
+		            {boards}
+		        </Masonry> 
         	</div>
 		);
 	}
