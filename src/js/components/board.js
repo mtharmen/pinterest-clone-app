@@ -13,6 +13,7 @@ class Board extends React.Component {
 		this.close = this.close.bind(this);
 		this.open = this.open.bind(this);
 		this.handleDeleteClick = this.handleDeleteClick.bind(this);
+		this.brokenImage = this.brokenImage.bind(this);
 	}
 
 	close() {
@@ -27,13 +28,18 @@ class Board extends React.Component {
 		this.props.handleDeleteClick(this.props.board._id);
 	}
 
+	brokenImage(e) {
+		console.log('broken image detected: ' + e.target.src);
+		e.target.src = e.target.src ? "/imgs/broken.png" : e.target.src;
+	}
+
 	render() {
 		var link = '/user/' + this.props.board.owner;
 		return (
 			<div className="col-md-3 col-xs-6">
 				<div className="panel panel-default">
 					<div className="panel-body">
-						<img className="center-block img-responsive maxheight" src={this.props.board.image} onClick={this.open}/>
+						<img className="center-block img-responsive maxheight" src={this.props.board.image} onError={this.brokenImage} onClick={this.open}/>
 						<h3 className="text-center">{this.props.board.description}</h3>
 					</div>
 					<div className="panel-footer clearfix">
