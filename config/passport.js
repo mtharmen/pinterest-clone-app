@@ -15,8 +15,8 @@ module.exports = function(passport) {
     });
   });
 
-  var ip           = process.env.ip           || '127.0.0.1';
-  var port         = process.env.port         || 8080;
+  var ip           = process.env.IP           || '127.0.0.1';
+  var port         = process.env.PORT         || 8080;
   var callback_url = process.env.CALLBACK_URL || 'http://' + ip + ':' + port;
 
   passport.use(new TwitterStrategy({
@@ -35,9 +35,7 @@ module.exports = function(passport) {
       if (!req.user) {
 
         User.findOne({ 'twitter.id' : profile.id }, function(err, user) {
-            if (err) {
-              return done(err);
-            }
+            if (err) { return done(err); }
             if (user) {
               if (!user.twitter.token) {
 
@@ -66,9 +64,7 @@ module.exports = function(passport) {
               newUser.twitter.displayName = profile.displayName;
 
               newUser.save(function(err) {
-                if (err)
-                  return done(err);
-
+                if (err) { return done(err); }
                 return done(null, newUser);
               });
             }
