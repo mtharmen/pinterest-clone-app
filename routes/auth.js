@@ -4,8 +4,6 @@ module.exports = function(app, passport) {
 
   	// SERVER SIDE REDIRECTS
 	app.get('/new', isLoggedIn);
-	app.get('/profile', isLoggedIn);
-
 	app.get('/auth/user', function(req, res) {
 		res.json(req.user);
 	});
@@ -25,19 +23,6 @@ module.exports = function(app, passport) {
 			failureRedirect : '/'
 		}
 	));
-
-	// UNLINK TWITTER
-	app.get('/unlink/twitter', isLoggedIn, function(req, res) {
-		var user           = req.user;
-		user.twitter.token = undefined;
-		req.logout();
-
-		user.save(function(err) {
-			if (err) { return next(err); }
-			res.send('Account Unlinked');
-		});
-	});
-
 };
 
 function isLoggedIn(req, res, next) {
