@@ -25,11 +25,12 @@ module.exports = function(app) {
 		User.findOne(query, '-__v', function(err, user) {
 			if (err) { return next(err); }
 
-			res.send(!!user)
+			res.send(!!user);
 		});
 	});
 
-	app.post('/api/addBoard', function(req, res, next) {
+	// Doesn't work with Heroku since the server spins up based on what's on github
+	app.post('/api/addBoardOld', function(req, res, next) {
 
 		var imageUrl    = req.body.image;
 		var description = req.body.description;
@@ -54,6 +55,25 @@ module.exports = function(app) {
 					res.json(convertLikes([newBoard], owner));
 				});
 			});
+	});
+
+	app.post('/api/addBoard', function(req, res, next) {
+
+		var imageUrl    = req.body.image;
+		var description = req.body.description;
+		var owner       = req.user.username;
+
+		var newBoard = new Board({
+			image       : imageUrl,
+			description : description,
+			owner       : owner,
+			likes       : []
+		});
+
+		newBoard.save(function(err) {
+			if (err) { return next(err); }
+			res.json(convertLikes([newBoard], owner));
+		});
 	});
 
 	app.get('/api/removeBoard/:id', function(req, res, next) {
@@ -87,6 +107,8 @@ module.exports = function(app) {
 	});
 };
 
+
+// Defunct with Heroku
 var generateID = function(num) {
 	var length = num || 4;
 	var letter = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789';

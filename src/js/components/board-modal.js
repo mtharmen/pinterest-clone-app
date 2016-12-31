@@ -7,11 +7,17 @@ class BoardModal extends React.Component{
 		super(props);
 
 		this.handleDeleteClick = this.handleDeleteClick.bind(this);
+		this.brokenImage = this.brokenImage.bind(this);
 	}
 
 	handleDeleteClick() {
 		this.props.handleDeleteClick(this.props.board._id);
 		this.props.close();
+	}
+
+	brokenImage(e) {
+		console.log('broken image detected: ' + e.target.src);
+		e.target.src = e.target.src ? "/imgs/broken.png" : e.target.src;
 	}
 
 	render() {
@@ -23,7 +29,7 @@ class BoardModal extends React.Component{
 				  	<h2 className="text-center">{this.props.board.description}</h2>
 				  </Modal.Header>
 				  <Modal.Body>
-				    <img className="center-block img-responsive" src={this.props.board.image} />
+				    <img className="center-block img-responsive" src={this.props.board.image} onError={this.brokenImage} />
 				  </Modal.Body>
 				  <Modal.Footer>
 				  	{this.props.profile ?
