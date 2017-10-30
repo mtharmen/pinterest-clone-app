@@ -1,12 +1,30 @@
-# Free Code Camp Challenge: [Build a Pinterest Clone App](https://www.freecodecamp.com/challenges/chart-the-stock-market)
+# vue-pinterest-clone
 
-##User stories:
-1. As an unauthenticated user, I can login with Twitter.
-2. As an authenticated user, I can link to images.
-3. As an authenticated user, I can delete images that I've linked to.
-4. As an authenticated user, I can see a Pinterest-style wall of all the images I've linked to.
-5. As an unauthenticated user, I can browse other users' walls of images.
-6. As an authenticated user, if I upload an image that is broken, it will be replaced by a placeholder image. (can use jQuery broken image detection)
+> Free Code Camp Challenge: Pinterest Clone
 
-##Possible Updates:
-1. Sort by popularity
+## Build Setup
+
+``` bash
+# install dependencies
+npm install
+
+# serve with hot reload at localhost:8080
+npm run dev
+
+# build for production with minification
+npm run build
+
+# build for production and view the bundle analyzer report
+npm run build --report
+
+# run unit tests
+npm run unit
+
+# run e2e tests
+npm run e2e
+
+# run all tests
+npm test
+```
+
+For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
