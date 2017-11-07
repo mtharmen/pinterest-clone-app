@@ -81,12 +81,6 @@ if (process.env.NODE_ENV !== 'dev') {
 app.use('/auth', require('./server/routes/auth'))
 app.use('/api', require('./server/routes/api'))
 
-if (process.env.NODE_ENV !== 'dev') {
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/dist/index.html'))
-  })
-}
-
 // ************* Error Handler
 app.use((err, req, res, next) => {
   console.error(err.message)
@@ -103,5 +97,11 @@ app.get('/error', (req, res) => {
     </p>
   `)
 })
+
+if (process.env.NODE_ENV !== 'dev') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '/dist/index.html'))
+  })
+}
 
 app.listen(CONFIG.PORT, () => { console.log(`Server listening on ${CONFIG.IP}:${CONFIG.PORT}`) })
