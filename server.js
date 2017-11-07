@@ -91,6 +91,16 @@ app.get('/error', (req, res) => {
 app.use('/auth', require('./server/routes/auth'))
 app.use('/api', require('./server/routes/api'))
 
+app.get('/error', (req, res) => {
+  const error = req.session.err || { message: 'Server Error', status: 500 }
+  delete req.session.err
+  res.send(`
+    <p style="font-size: 50px">
+      ${error.status}: <small>${error.message}</small>
+    </p>
+  `)
+})
+
 if (process.env.NODE_ENV !== 'dev') {
   app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '/dist/index.html'))
