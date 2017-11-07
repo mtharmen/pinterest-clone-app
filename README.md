@@ -10,3 +10,4 @@
 
 ## Possible Updates:
 1. Sort by popularity
+2. Direct upload
