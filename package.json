@@ -101,10 +101,6 @@
     "webpack-hot-middleware": "^2.18.2",
     "webpack-merge": "^4.1.0"
   },
-  "engines": {
-    "node": "6.9.2",
-    "npm": "4.0.3"
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
