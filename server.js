@@ -81,13 +81,6 @@ if (process.env.NODE_ENV !== 'dev') {
 app.use('/auth', require('./server/routes/auth'))
 app.use('/api', require('./server/routes/api'))
 
-// ************* Error Handler
-app.use((err, req, res, next) => {
-  console.error(err.message)
-  delete err.name
-  res.status(err.status || 500).json(err)
-})
-
 app.get('/error', (req, res) => {
   const error = req.session.err || { message: 'Server Error', status: 500 }
   delete req.session.err
@@ -103,5 +96,12 @@ if (process.env.NODE_ENV !== 'dev') {
     res.sendFile(path.join(__dirname, '/dist/index.html'))
   })
 }
+
+// ************* Error Handler
+app.use((err, req, res, next) => {
+  console.error(err.message)
+  delete err.name
+  res.status(err.status || 500).json(err)
+})
 
 app.listen(CONFIG.PORT, () => { console.log(`Server listening on ${CONFIG.IP}:${CONFIG.PORT}`) })
