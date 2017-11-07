@@ -14,7 +14,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/:username',
+      path: '/user/:username',
       name: 'user-page',
       component: UserPage
     },

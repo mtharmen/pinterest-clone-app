@@ -78,6 +78,16 @@ if (process.env.NODE_ENV !== 'dev') {
   })
 }
 
+app.get('/error', (req, res) => {
+  const error = req.session.err || { message: 'Server Error', status: 500 }
+  delete req.session.err
+  res.send(`
+    <p style="font-size: 50px">
+      ${error.status}: <small>${error.message}</small>
+    </p>
+  `)
+})
+
 app.use('/auth', require('./server/routes/auth'))
 app.use('/api', require('./server/routes/api'))
 
@@ -92,16 +102,6 @@ app.use((err, req, res, next) => {
   console.error(err.message)
   delete err.name
   res.status(err.status || 500).json(err)
-})
-
-app.get('/error', (req, res) => {
-  const error = req.session.err || { message: 'Server Error', status: 500 }
-  delete req.session.err
-  res.send(`
-    <p style="font-size: 50px">
-      ${error.status}: <small>${error.message}</small>
-    </p>
-  `)
 })
 
 app.listen(CONFIG.PORT, () => { console.log(`Server listening on ${CONFIG.IP}:${CONFIG.PORT}`) })

@@ -3,7 +3,7 @@
     <div id="wrapper">
       <app-header>
         <b-nav is-nav-bar slot="nav-items" class="ml-auto">
-          <b-nav-item v-if="user.username" :to="'/' + user.username"><i class="fa fa-th" aria-hidden="true"></i> My Boards</b-nav-item>
+          <b-nav-item v-if="user.username" :to="'/user/' + user.username"><i class="fa fa-th" aria-hidden="true"></i> My Boards</b-nav-item>
           <b-nav-item v-if="!user.username" @click="login">
             <i class="fa fa-sign-in" aria-hidden="true"></i> Login
           </b-nav-item>
@@ -20,8 +20,7 @@
       <small>
         <a href="https://www.freecodecamp.com/challenges/build-a-pinterest-clone" target="_blank">FCC Pinterest Clone App</a> | 
         <a href="https://github.com/mtharmen/pinterest-clone-app" target="_blank"> GitHub Repo <i className="fa fa-github" aria-hidden="true"></i></a> | 
-        <a href="http://fontawesome.io/" target="_blank"> Icons from Font Awesome <i className="fa fa-font-awesome" aria-hidden="true"></i></a> | 
-        <a href="https://bootswatch.com/darkly/" target="_blank"> Darkly Theme from Bootswatch</a>
+        <a href="http://fontawesome.io/" target="_blank"> Icons from Font Awesome <i className="fa fa-font-awesome" aria-hidden="true"></i></a>
       </small>
     </app-footer>
   </div>

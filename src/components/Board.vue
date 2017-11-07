@@ -6,7 +6,7 @@
     </div>
     <div class="card-footer">
       <div class="text-center">
-        <router-link :to="'/' + board.owner">@{{ board.owner }}</router-link>
+        <router-link :to="'/user/' + board.owner">@{{ board.owner }}</router-link>
       </div>
       <button class="btn btn-sm pull-right" :class="likeClass" :disabled="!username" @click="like">
         <i class="fa" :class="board.liked ? 'fa-thumbs-down' : 'fa-thumbs-up'" aria-hidden="true"></i>
