@@ -4,17 +4,19 @@ const User = require('../models/user')
 const CONFIG = require('../config')
 const my = require('./../helper')
 const CustomError = my.CustomError
+const myRequest = require('request-promise-native').defaults({ json: true })
 
-const request = require('request-promise-native')
-const myRequest = request.defaults({
-  json: true,
-  baseUrl: 'https://api.imgur.com/3/image',
-  headers: { 'Authorization': 'Client-ID ' + CONFIG.imgurClientID }
-})
+function setHeaders () {
+  if (!process.env.access_token) {
+    console.log('access token not found, defaulting to anonymous upload')
+    return { headers: { 'Authorization': 'Client-ID ' + CONFIG.imgurClientID } }
+  }
+  return { headers: { 'Authorization': 'Bearer ' + process.env.access_token } }
+}
 
 router.get('/allBoards/:username?', my.verifyToken, (req, res, next) => {
   const query = req.params.username ? { owner: req.params.username } : {}
-  Board.find(query, '-deleteHash -__v').exec()
+  Board.find(query, '-deleteHash -srcImage -__v').exec()
     .then(boards => {
       if (req.params.username && !boards.length) {
         req.userCheck = true
@@ -40,8 +42,9 @@ router.get('/allBoards/:username?', my.verifyToken, (req, res, next) => {
 
 router.get('/likedBoards', my.verifyToken, my.UserGuard, (req, res, next) => {
   const user = req.user.username
-  const query = { 'owner': { '$ne': user }, likes: user }
-  Board.find(query, (err, boards) => {
+  const query = { likes: user }
+  // query.owner = { '$ne': user }
+  Board.find(query, '-deleteHash -srcImage -__v', (err, boards) => {
     if (err) { return next(err) }
     res.json(convertLikes(boards, user))
   })
@@ -71,12 +74,17 @@ router.post('/addBoard', my.verifyToken, my.UserGuard, (req, res, next) => {
   //   if (err) { return next(err) }
   //   res.json(board)
   // }
-
-  myRequest.post('/').form({ type: 'url', image: srcImage })
+  
+  // TODO: add option to upload directly?
+  const form = { type: 'url', image: srcImage, title: description, description: req.user.username }
+  if (process.env.access_token) {
+    form.album = 'CWCQv'
+  }
+  myRequest.post('https://api.imgur.com/3/image/', setHeaders()).form(form)
     .then(response => {
       const deleteHash = response.data.deletehash
       const image = response.data.link
-      const newBoard = new Board({ image, description, owner, deleteHash, likes })
+      const newBoard = new Board({ image, srcImage, description, owner, deleteHash, likes })
       return newBoard.save()
     })
     .then(saved => {
@@ -101,7 +109,7 @@ router.delete('/removeBoard/:id', my.verifyToken, my.UserGuard, (req, res, next)
       return Board.findByIdAndRemove(_id).exec()
     })
     .then(result => {
-      myRequest.delete('/' + req.deleteHash)
+      myRequest.delete('https://api.imgur.com/3/image/' + req.deleteHash, setHeaders())
     })
     .then(result => {
       res.send('removed')
@@ -133,6 +141,8 @@ router.put('/updateLikes/:id', my.verifyToken, my.UserGuard, (req, res, next) =>
       return next(err)
     })
 })
+
+// TODO: Admin route to move anonymous uploads to album?
 
 function convertLikes (boards, user) {
   const copy = JSON.parse(JSON.stringify(boards))

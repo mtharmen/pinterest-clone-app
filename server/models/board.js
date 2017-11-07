@@ -1,10 +1,11 @@
-var mongoose = require('mongoose')
+const mongoose = require('mongoose')
 
-var boardSchema = new mongoose.Schema({
+const boardSchema = new mongoose.Schema({
   image: String,
+  srcImage: String,
   description: String,
   owner: String,
-  deleteHash: String,
+  deleteHash: String, // NOTE: could save space by just using image ID from the image
   likes: [String]
 })
 

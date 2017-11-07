@@ -44,7 +44,7 @@ const expiration = CONFIG.expiration || 60 * 120
 
 function generateToken (user) {
   user.exp = Math.floor(Date.now() / 1000) + expiration
-  const token = jwt.sign(user, CONFIG.jwtSecret)
+  const token = jwt.sign(user, CONFIG.JWT_SECRET)
   return token
 }
 
@@ -59,7 +59,7 @@ function pruneDetails (user) {
 
 function tokenCheck (token) {
   try {
-    return jwt.verify(token, CONFIG.jwtSecret)
+    return jwt.verify(token, CONFIG.JWT_SECRET)
   } catch (err) {
     return err
   }
@@ -75,10 +75,11 @@ function verifyToken (req, res, next) {
     return next()
     // return next(new CustomError('Json Web Token Required', 401))
   }
-  const payload = tokenCheck(token)
+  let payload = tokenCheck(token)
 
   if (isError(payload)) {
-    return next(payload)
+    payload = {}
+    // return next(payload)
   }
   req.payload = payload
   return next()

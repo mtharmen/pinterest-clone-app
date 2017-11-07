@@ -33,7 +33,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import userStore from '@/userStore'
 import router from '@/router/index'
-import { login$ } from '@/http-request'
+import { getUser$, twitterLogin$ } from '@/http-request'
 
 export default {
   name: 'app',
@@ -47,10 +47,15 @@ export default {
     }
   },
   created () {
+    if (userStore.checkToken()) {
+      userStore.setUserInfo()
+    } else {
+      userStore.removeLocalStorage()
+    }
     const redirectTo = localStorage.getItem('redirectTo')
     if (redirectTo) {
       localStorage.removeItem('redirectTo')
-      login$()
+      getUser$()
         .then(res => {
           userStore.login(res.data)
           router.push(redirectTo)
@@ -60,16 +65,11 @@ export default {
           router.push(redirectTo)
         })
     }
-    if (userStore.checkToken()) {
-      userStore.setUserInfo()
-    } else {
-      userStore.removeLocalStorage()
-    }
   },
   methods: {
     login () {
       localStorage.setItem('redirectTo', this.$route.fullPath)
-      window.location.href = 'http://localhost:8080/auth/twitter'
+      twitterLogin$()
     },
     logout () {
       userStore.logout()

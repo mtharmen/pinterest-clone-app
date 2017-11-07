@@ -13,10 +13,25 @@ export default {
 </script>
 
 <style>
-  .fade-enter-active, .fade-leave-active {
-    transition: opacity .5s
+  .fade-enter-active {
+    animation: grow .5s;
+    animation-timing-function: ease-out;
   }
-  .fade-enter, .fade-leave-to {
+  .fade-leave-active {
+    animation: grow .5s;
+    animation-timing-function: ease-out;
+    animation-direction: reverse;
+  }
+  /* .fade-enter, .fade-leave-to {
     opacity: 0
+  } */
+
+  @keyframes grow {
+  0% {
+    transform: scale(0);
   }
+  100% {
+    transform: scale(1);
+  }
+}
 </style>

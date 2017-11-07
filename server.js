@@ -1,20 +1,16 @@
-require('dotenv').config()
 const express = require('express')
 const app = express()
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const methodOverride = require('method-override')
-
 const path = require('path')
-
 const CONFIG = require('./server/config')
 
 // ************************************************************************************ MONGOOSE SETUP
 mongoose.Promise = global.Promise
-const mongodbUrl = CONFIG.mongodbUrl
 // TODO: Change the dbname
 const dbName = 'mtharmen-pinterst-clone-app'
-mongoose.connect(mongodbUrl + '/' + dbName, { useMongoClient: true })
+mongoose.connect(CONFIG.MONGODB_URL + '/' + dbName, { useMongoClient: true })
 const db = mongoose.connection
 db.on('error', err => {
   console.error(err)

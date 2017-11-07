@@ -42,7 +42,7 @@ export default {
     })
   },
   checkToken () {
-    const exp = localStorage.getItem('exp') ? JSON.parse(localStorage.getItem('exp') * 1000) : 0
+    const exp = localStorage.getItem('exp') ? JSON.parse(localStorage.getItem('exp')) * 1000 : 0
     return Date.now() < exp
   },
   checkAdmin () {

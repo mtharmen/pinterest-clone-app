@@ -6,9 +6,55 @@ const CONFIG = require('./../config')
 const my = require('./../helper')
 const CustomError = my.CustomError
 
-router.get('/test', (req, res) => {
-  res.send('Auth Test')
-})
+// Setting Imgur access token
+const myRequest = require('request-promise-native').defaults({ json: true })
+const Cred = require('./../models/cred')
+
+Cred.findOne({}).exec()
+  .then(cred => {
+    if (!cred) {
+      throw { message: 'no credentials found' }
+    }
+    if (cred.expire < Date.now()) {
+      return cred.refresh
+    }
+    process.env.access_token = cred.access
+    throw { skip: true }
+  })
+  .then(refresh => {
+    return myRequest
+      .post('https://api.imgur.com/oauth2/token')
+      .form({
+        refresh_token: refresh,
+        client_id: CONFIG.imgurClientID,
+        client_secret: CONFIG.imgurClientSecret,
+        grant_type: 'refresh_token'
+      })
+  })
+  .then(response => {
+    console.log('access token set')
+    process.env.access_token = response.access_token
+    return response
+  })
+  .then(info => {
+    Cred.findOne({}, (err, cred) => {
+      if (err) {
+        throw err
+      }
+      cred.access = info.access_token
+      cred.refresh = info.refresh_token
+      const expire = +info.expires_in
+      cred.expire = new Date(Date.now() + expire)
+      cred.save()
+    })
+  })
+  .catch(err => {
+    if (err.skip) {
+      console.log('access token set')
+    } else {
+      console.error(err.message)
+    }
+  })
 
 // ****************************************************************************************************
 //                                                TWITTER LOGIN
@@ -28,7 +74,15 @@ const successRedirectUrl = CONFIG.successRedirectUrl || 'http://google.ca'
 const failureRedirectUrl = CONFIG.failureRedirectUrl || 'http://youtube.com'
 
 // Getting Request Token + Secret
-router.get('/twitter/', (req, res, next) => {
+router.get('/twitter/', (req, res) => {
+  if (req.session.oauthAccessToken && req.session.oauthAccessTokenSecret) {
+    return verifyCredentials(req, res)
+  } else {
+    return getAuthorization(req, res)
+  }
+})
+
+function getAuthorization (req, res) {
   oa.getOAuthRequestToken((err, oauthToken, oauthTokenSecret, result) => {
     if (err) {
       console.error('Error getting OAuth request token')
@@ -38,16 +92,9 @@ router.get('/twitter/', (req, res, next) => {
     }
     req.session.oauthRequestToken = oauthToken
     req.session.oauthRequestTokenSecret = oauthTokenSecret
-    if (req.session.oauthAccessToken) {
-      return verifyCredentials(req, res)
-    }
-    return getAuthorization(req, res)
+    const authorizationUrl = 'https://api.twitter.com/oauth/authorize?oauth_token=' + req.session.oauthRequestToken
+    res.redirect(authorizationUrl)
   })
-})
-
-function getAuthorization (req, res) {
-  const authorizationUrl = 'https://api.twitter.com/oauth/authorize?oauth_token=' + req.session.oauthRequestToken
-  res.redirect(authorizationUrl)
 }
 
 // Getting Access Token + Secret => Finding/Making User
@@ -97,7 +144,6 @@ function pullUserInfo (req, res) {
         return verifyCredentials(req, res)
       }
       req.session.user = user
-      console.log('success1')
       return res.redirect(successRedirectUrl)
     })
     .catch(err => {
@@ -147,7 +193,6 @@ function makeNewTwitterUser (req, res) {
   newUser.save()
     .then(user => {
       req.session.user = user
-      console.log('success2')
       return res.redirect(successRedirectUrl)
     })
     .catch(err => {
