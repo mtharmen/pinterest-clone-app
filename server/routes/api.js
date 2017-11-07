@@ -88,6 +88,7 @@ router.post('/addBoard', my.verifyToken, my.UserGuard, (req, res, next) => {
       return newBoard.save()
     })
     .then(saved => {
+      board._id = saved._id
       board.image = saved.image
       res.json(board)
     })
