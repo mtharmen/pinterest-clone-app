@@ -7,11 +7,7 @@ const CustomError = my.CustomError
 const myRequest = require('request-promise-native').defaults({ json: true })
 
 function setHeaders () {
-  if (!process.env.access_token) {
-    console.log('access token not found, defaulting to anonymous upload')
-    return { headers: { 'Authorization': 'Client-ID ' + CONFIG.imgurClientID } }
-  }
-  return { headers: { 'Authorization': 'Bearer ' + process.env.access_token } }
+  return { headers: { 'Authorization': 'Client-ID ' + CONFIG.IMGUR_CLIENT_ID } }
 }
 
 router.get('/allBoards/:username?', my.verifyToken, (req, res, next) => {
@@ -76,10 +72,9 @@ router.post('/addBoard', my.verifyToken, my.UserGuard, (req, res, next) => {
   // }
   
   // TODO: add option to upload directly?
-  const form = { type: 'url', image: srcImage, title: description, description: req.user.username }
-  if (process.env.access_token) {
-    form.album = 'CWCQv'
-  }
+
+  // const form = { type: 'url', image: srcImage, title: description, description: req.user.username }
+  const form = { type: 'url', image: srcImage }
   myRequest.post('https://api.imgur.com/3/image/', setHeaders()).form(form)
     .then(response => {
       const deleteHash = response.data.deletehash
@@ -93,8 +88,8 @@ router.post('/addBoard', my.verifyToken, my.UserGuard, (req, res, next) => {
       res.json(board)
     })
     .catch(err => {
-      console.error(err)
-      res.send('error')
+      console.error(err.message)
+      next(err)
     })
 })
 
@@ -142,8 +137,6 @@ router.put('/updateLikes/:id', my.verifyToken, my.UserGuard, (req, res, next) =>
       return next(err)
     })
 })
-
-// TODO: Admin route to move anonymous uploads to album?
 
 function convertLikes (boards, user) {
   const copy = JSON.parse(JSON.stringify(boards))
