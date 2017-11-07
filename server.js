@@ -47,7 +47,7 @@ app.use(session({
   }
 }))
 
-if (process.env.NODE_ENV === 'dev) {
+if (process.env.NODE_ENV === 'dev') {
   // CORS Support
   const cors = require('cors')
   const allowedOrigins = [
